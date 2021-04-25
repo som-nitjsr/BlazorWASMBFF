@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BlazorWASMBFF.Api.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         [AllowAnonymous]

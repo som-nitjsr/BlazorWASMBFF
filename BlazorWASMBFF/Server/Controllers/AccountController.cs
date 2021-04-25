@@ -13,7 +13,7 @@ namespace BlazorWASMBFF.Server.Controllers
         [HttpGet("Login")]
         public ActionResult Login(string returnUrl)
         {
-            return Challenge(new AuthenticationProperties { RedirectUri = returnUrl });
+            return Challenge(new AuthenticationProperties { RedirectUri = !string.IsNullOrEmpty(returnUrl) ? returnUrl : "/" });
         }
 
         [HttpGet("Logout")]

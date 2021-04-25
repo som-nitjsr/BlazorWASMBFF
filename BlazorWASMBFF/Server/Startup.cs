@@ -36,7 +36,7 @@ namespace BlazorWASMBFF.Server
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -67,7 +67,7 @@ namespace BlazorWASMBFF.Server
              .AddInMemoryClients(
 
                     Config.GetClients()
-           )
+           ).AddProfileService<ProfileService>()
             .AddDeveloperSigningCredential();
 
             services.AddAuthentication(options =>
@@ -78,8 +78,8 @@ namespace BlazorWASMBFF.Server
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
                     options.Cookie.Name = "mytestapp";
-                    options.Cookie.SameSite = SameSiteMode.Strict;
-                
+                   options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.SessionStore = new AuthTicketStore();
                     options.Events.OnSigningOut = async e =>
                     {
                         await e.HttpContext.RevokeUserRefreshTokenAsync();
@@ -155,7 +155,7 @@ namespace BlazorWASMBFF.Server
                 {
                     proxyPipeline.Use(async (context, next) =>
                     {
-                        var token = await context.GetClientAccessTokenAsync();
+                        var token = await context.GetUserAccessTokenAsync();
                         context.Request.Headers.Add("Authorization", $"Bearer {token}");
 
                         await next().ConfigureAwait(false);

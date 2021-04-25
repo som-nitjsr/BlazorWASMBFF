@@ -1,0 +1,33 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<header>
+    <h1>@ViewData["Title"]</h1> <small>You are now logged out</small>
+    @{
+         
+
+    @if (Model.LoggedOut.PostLogoutRedirectUri != null)
+    {
+        <div>
+            Click <a class="PostLogoutRedirectUri" href="@Model.LoggedOut.PostLogoutRedirectUri">here</a> to return to the
+            <span>@Model.LoggedOut.ClientName</span> application.
+        </div>
+    }
+
+    @if (Model.LoggedOut.SignOutIframeUrl != null)
+    {
+        <iframe width="0" height="0" class="signout" src="@Model.LoggedOut.SignOutIframeUrl"></iframe>
+    }
+    }
+</header>
+
+@section scripts
+{
+    @if (Model.LoggedOut.AutomaticRedirectAfterSignOut)
+    {
+        <script src="~/js/signout-redirect.js"></script>
+    }
+}

@@ -54,7 +54,7 @@ namespace BlazorWASMBFF.Client.Services
 
             try
             {
-                _user = await _client.GetFromJsonAsync<UserProfile>("myapi/users/me");
+                _user = await _client.GetFromJsonAsync<UserProfile>("myapi/me");
               
             }
             catch (Exception exc)
@@ -62,7 +62,7 @@ namespace BlazorWASMBFF.Client.Services
                 
             }
 
-            if (string.IsNullOrWhiteSpace(_user?.UserName))
+            if (_user?.IsAuthenticated==false)
             {
                 return new ClaimsPrincipal(new ClaimsIdentity());
             }
